@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Pace</string>
     <string name="web_client_id">267595921848-qa7i4b1r8ogit5gi0tepl5cmo6jl8ihs.apps.googleusercontent.com</string>
+    <string name="sign_up_button">Sign up with Google</string>
+    <string name="google_logo_desc">Google icon</string>
+    <string name="pace_logo_desc">Pace Logo</string>
 </resources>
