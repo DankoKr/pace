@@ -11,7 +11,7 @@
     tools:context=".SignInActivity">
 
     <ImageView
-        android:id="@+id/paceLogo"
+        android:id="@+id/imgPaceLogo"
         android:layout_width="fill_parent"
         android:layout_height="455dp"
         android:contentDescription="@string/pace_logo_desc"
@@ -33,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paceLogo">
+        app:layout_constraintTop_toBottomOf="@+id/imgPaceLogo">
 
         <ImageView
             android:layout_width="28dp"
@@ -46,7 +46,7 @@
             android:src="@drawable/google" />
 
         <Button
-            android:id="@+id/signInButton"
+            android:id="@+id/btnSignIn"
             android:layout_width="wrap_content"
             android:minWidth="200dp"
             android:layout_height="wrap_content"
