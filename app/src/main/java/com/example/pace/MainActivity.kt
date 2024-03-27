@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var tvDatePicker: TextView
     private lateinit var btnDatePicker: Button
+    private lateinit var btnAddWorkout: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +76,13 @@ class MainActivity : AppCompatActivity() {
         btnDatePicker.setOnClickListener {
             DatePickerDialog(this, datePicker, myCalendar.get(Calendar.YEAR),
                 myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        btnAddWorkout = findViewById(R.id.btnAddWorkout)
+
+        btnAddWorkout.setOnClickListener {
+            startActivity(Intent(this, CreateWorkoutActivity::class.java))
+            finish()
         }
     }
 
