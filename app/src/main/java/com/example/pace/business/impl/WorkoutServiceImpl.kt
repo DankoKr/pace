@@ -6,14 +6,14 @@ import com.example.pace.persistence.IWorkoutRepository
 
 class WorkoutServiceImpl(private val repository: IWorkoutRepository) : IWorkoutService {
     override fun createWorkout(userId: String, workout: Workout) {
-        val workoutMap = hashMapOf<String, Any>(
+        val workoutMap = hashMapOf(
             "workoutName" to (workout.workoutName ?: ""),
             "gymName" to (workout.gymName ?: ""),
             "exercises" to (workout.exercises?.map { exercise ->
                 hashMapOf<String, Any>(
                     "name" to (exercise.name ?: ""),
-                    "reps" to (exercise.reps ?: 0),
-                    "kg" to (exercise.kg ?: 0)
+                    "reps" to exercise.reps,
+                    "kg" to exercise.kg
                 )
             } ?: emptyList())
         )
