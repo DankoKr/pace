@@ -8,4 +8,10 @@
     <string name="logout_button">logout</string>
     <string name="add_workout">Add Workout</string>
     <string name="select_date">Select Date</string>
+    <string name="workout_name">Workout Name</string>
+    <string name="gym_name">Gym Name</string>
+    <string name="add_exercise">Add Exercise</string>
+    <string name="exercise_name">Exercise Name</string>
+    <string name="kg">Kg</string>
+    <string name="reps">Reps</string>
 </resources>

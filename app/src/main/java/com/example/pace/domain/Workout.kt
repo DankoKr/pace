@@ -1,4 +1,4 @@
-package com.example.pace.classes
+package com.example.pace.domain
 
 data class Workout (
     val workoutName: String? = null,
