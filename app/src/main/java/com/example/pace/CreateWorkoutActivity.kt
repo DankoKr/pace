@@ -6,18 +6,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
+import com.example.pace.business.impl.AuthServiceImpl
 import com.example.pace.business.impl.WorkoutServiceImpl
 import com.example.pace.domain.Exercise
 import com.example.pace.domain.Workout
+import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateWorkoutActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var authService: IAuthService
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var workoutRepository: IWorkoutRepository
     private lateinit var workoutService: IWorkoutService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +31,11 @@ class CreateWorkoutActivity : AppCompatActivity() {
         val exercisesContainer: LinearLayout = findViewById(R.id.exercisesContainer)
 
         // Initialize Firebase Auth and Firestore instances
-        auth = FirebaseAuth.getInstance()
+        authService = AuthServiceImpl(this)
         firestore = FirebaseFirestore.getInstance()
 
         // Initialize repository and service
-        val workoutRepository = WorkoutRepositoryImpl(firestore)
+        workoutRepository = WorkoutRepositoryImpl(firestore)
         workoutService = WorkoutServiceImpl(workoutRepository)
 
         // Display the exercise fields
@@ -51,8 +54,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
     }
 
     private fun saveWorkoutToFirebase() {
-        // Get current user ID from Firebase Auth
-        val userId = auth.currentUser?.uid ?: return
+        val userId = authService.getUserId()
 
         val workoutName = findViewById<EditText>(R.id.workoutName).text.toString()
         val gymName = findViewById<EditText>(R.id.gymName).text.toString()
@@ -79,6 +81,8 @@ class CreateWorkoutActivity : AppCompatActivity() {
         }
 
         val workout = Workout(workoutName, gymName, exercises)
-        workoutService.createWorkout(userId, workout)
+        if (userId != null) {
+            workoutService.createWorkout(userId, workout)
+        }
     }
 }
