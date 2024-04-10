@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pace.adapter.WorkoutAdapter
@@ -17,6 +18,7 @@ import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -75,31 +77,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Needs to be in the service/repository class
     private fun fetchWorkouts(selectedDate: String) {
-        val currentUserID = authService.getUserId()
+        val userId = authService.getUserId().toString()
 
-        if (currentUserID != null) {
-            firestore.collection("users")
-                .document(currentUserID)
-                .collection(selectedDate) // Collection for selected date
-                .get()
-                .addOnSuccessListener { documents ->
-                    val workoutNames = mutableListOf<String>()
-                    for (document in documents) {
-                        val workoutName = document.getString("workoutName")
-                        if (workoutName != null) {
-                            workoutNames.add(workoutName)
-                        }
-                    }
-                    val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
-                    recyclerView.adapter = WorkoutAdapter(workoutNames)
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("MainActivity", "Error getting workouts", exception)
-                }
-        } else {
-            Log.e("MainActivity", "User ID is null")
+        lifecycleScope.launch {
+            try {
+                val workouts = workoutService.getWorkoutsForDate(userId, selectedDate)
+                val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
+                recyclerView.adapter = WorkoutAdapter(workouts)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error fetching workouts", e)
+            }
         }
     }
 

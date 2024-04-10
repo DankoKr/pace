@@ -20,4 +20,8 @@ class WorkoutServiceImpl(private val repository: IWorkoutRepository) : IWorkoutS
 
         repository.createWorkout(userId, workoutMap)
     }
+
+    override suspend fun getWorkoutsForDate(userId: String, selectedDate: String): List<Workout> {
+        return repository.getWorkoutsForDate(userId, selectedDate)
+    }
 }
