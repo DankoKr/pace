@@ -12,19 +12,21 @@
 
         <EditText
             android:id="@+id/workoutName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="290dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
             android:hint="@string/workout_name"
-            android:inputType="text"
-            android:importantForAutofill="no" />
+            android:importantForAutofill="no"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/gymName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="290dp"
+            android:layout_height="60dp"
             android:hint="@string/gym_name"
+            android:importantForAutofill="no"
             android:inputType="text"
-            android:importantForAutofill="no" />
+            android:layout_gravity="center" />
 
         <!-- Container for Dynamic Exercise Fields -->
         <LinearLayout
@@ -45,8 +47,16 @@
 
         <Button
             android:id="@+id/btnCreateWorkout"
-            android:layout_width="match_parent"
+            android:layout_width="268dp"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="@string/create_workout"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/btnGoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/go_back" />
     </LinearLayout>
 </ScrollView>

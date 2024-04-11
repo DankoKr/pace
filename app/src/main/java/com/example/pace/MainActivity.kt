@@ -1,5 +1,6 @@
 package com.example.pace
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -83,8 +84,17 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val workouts = workoutService.getWorkoutsForDate(userId, selectedDate)
-                val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
-                recyclerView.adapter = WorkoutAdapter(workouts)
+                if (workouts.isNotEmpty()) {
+                    val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
+                    recyclerView.adapter = WorkoutAdapter(workouts)
+                } else {
+                    val builder = AlertDialog.Builder(this@MainActivity)
+                    builder.setTitle("No Workouts")
+                    builder.setMessage("There are no workouts available for ${selectedDate}.")
+                    builder.setPositiveButton("OK", null)
+                    val dialog = builder.create()
+                    dialog.show()
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error fetching workouts", e)
             }
