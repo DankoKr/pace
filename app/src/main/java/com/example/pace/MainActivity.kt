@@ -1,11 +1,13 @@
 package com.example.pace
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pace.adapter.WorkoutAdapter
@@ -17,6 +19,7 @@ import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -75,31 +78,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Needs to be in the service/repository class
     private fun fetchWorkouts(selectedDate: String) {
-        val currentUserID = authService.getUserId()
+        val userId = authService.getUserId().toString()
 
-        if (currentUserID != null) {
-            firestore.collection("users")
-                .document(currentUserID)
-                .collection(selectedDate) // Collection for selected date
-                .get()
-                .addOnSuccessListener { documents ->
-                    val workoutNames = mutableListOf<String>()
-                    for (document in documents) {
-                        val workoutName = document.getString("workoutName")
-                        if (workoutName != null) {
-                            workoutNames.add(workoutName)
-                        }
-                    }
+        lifecycleScope.launch {
+            try {
+                val workouts = workoutService.getWorkoutsForDate(userId, selectedDate)
+                if (workouts.isNotEmpty()) {
                     val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
-                    recyclerView.adapter = WorkoutAdapter(workoutNames)
+                    recyclerView.adapter = WorkoutAdapter(workouts)
+                } else {
+                    val builder = AlertDialog.Builder(this@MainActivity)
+                    builder.setTitle("No Workouts")
+                    builder.setMessage("There are no workouts available for ${selectedDate}.")
+                    builder.setPositiveButton("OK", null)
+                    val dialog = builder.create()
+                    dialog.show()
                 }
-                .addOnFailureListener { exception ->
-                    Log.e("MainActivity", "Error getting workouts", exception)
-                }
-        } else {
-            Log.e("MainActivity", "User ID is null")
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error fetching workouts", e)
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.pace
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
@@ -50,6 +51,12 @@ class CreateWorkoutActivity : AppCompatActivity() {
         val btnCreateWorkout: Button = findViewById(R.id.btnCreateWorkout)
         btnCreateWorkout.setOnClickListener {
             saveWorkoutToFirebase()
+        }
+
+        val btnGoBack: Button = findViewById(R.id.btnGoBack)
+        btnGoBack.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

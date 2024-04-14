@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pace.R
+import com.example.pace.domain.Workout
 
-class WorkoutAdapter(private val workoutNames: List<String>) :
+class WorkoutAdapter(private val workouts: List<Workout>) :
     RecyclerView.Adapter<WorkoutAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,10 +22,11 @@ class WorkoutAdapter(private val workoutNames: List<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.workoutNameTextView.text = workoutNames[position]
+        val workout = workouts[position]
+        holder.workoutNameTextView.text = workout.workoutName
     }
 
     override fun getItemCount(): Int {
-        return workoutNames.size
+        return workouts.size
     }
 }
