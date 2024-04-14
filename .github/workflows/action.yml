@@ -17,7 +17,9 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Gradle
-        uses: ./gradlew build
+        uses: gradle/wrapper-action@v1.3.0
+        with:
+          args: build
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3.1.3
