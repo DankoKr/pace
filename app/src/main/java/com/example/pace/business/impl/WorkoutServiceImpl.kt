@@ -5,7 +5,7 @@ import com.example.pace.domain.Workout
 import com.example.pace.persistence.IWorkoutRepository
 
 class WorkoutServiceImpl(private val repository: IWorkoutRepository) : IWorkoutService {
-    override fun createWorkout(userId: String, workout: Workout) {
+    override suspend fun createWorkout(userId: String, workout: Workout) {
         val workoutMap = hashMapOf(
             "workoutName" to (workout.workoutName ?: ""),
             "gymName" to (workout.gymName ?: ""),

@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
@@ -16,6 +18,7 @@ import com.example.pace.domain.Workout
 import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 class CreateWorkoutActivity : AppCompatActivity() {
 
@@ -89,7 +92,14 @@ class CreateWorkoutActivity : AppCompatActivity() {
 
         val workout = Workout(workoutName, gymName, exercises)
         if (userId != null) {
-            workoutService.createWorkout(userId, workout)
+            lifecycleScope.launch {
+                try {
+                    workoutService.createWorkout(userId, workout)
+                } catch (e: Exception) {
+                    Toast.makeText(this@CreateWorkoutActivity, "Failed to create workout: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
         }
     }
 }
