@@ -30,9 +30,10 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
                 .get()
                 .await()
 
-            // Convert the resulting documents directly into Workout objects
             return documents.map { document ->
-                document.toObject(Workout::class.java)
+                val workout = document.toObject(Workout::class.java)
+                // Create a new Workout instance with the Firestore id
+                workout.copy(id = document.id)
             }
         } catch (exception: Exception) {
             throw exception

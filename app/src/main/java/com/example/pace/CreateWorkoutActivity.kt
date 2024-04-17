@@ -90,7 +90,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
             }
         }
 
-        val workout = Workout(workoutName, gymName, exercises)
+        val workout = Workout(id = null, workoutName, gymName, exercises)
         if (userId != null) {
             lifecycleScope.launch {
                 try {

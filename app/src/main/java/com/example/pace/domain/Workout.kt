@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Workout (
+    val id: String? = null, // This field is used locally and not stored in Firestore
     val workoutName: String? = null,
     val gymName: String? = null,
     val exercises: List<Exercise>? = null
@@ -11,10 +12,12 @@ data class Workout (
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
+        parcel.readString(),
         parcel.createTypedArrayList(Exercise)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
         parcel.writeString(workoutName)
         parcel.writeString(gymName)
         parcel.writeTypedList(exercises)

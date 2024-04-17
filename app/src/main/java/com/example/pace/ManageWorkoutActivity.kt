@@ -2,6 +2,7 @@ package com.example.pace
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -36,7 +37,7 @@ class ManageWorkoutActivity : AppCompatActivity() {
 
         val btnCreateWorkout: Button = findViewById(R.id.btnDeleteWorkout)
         btnCreateWorkout.setOnClickListener {
-            deleteWorkout()
+            deleteWorkout(workout)
         }
 
         val btnGoBack: Button = findViewById(R.id.btnBackToMainActivity)
@@ -46,5 +47,7 @@ class ManageWorkoutActivity : AppCompatActivity() {
         }
 
     }
-    private fun deleteWorkout(){}
+    private fun deleteWorkout(workout: Workout){
+        Log.d("WorkoutIdTest", workout.id.toString())
+    }
 }
