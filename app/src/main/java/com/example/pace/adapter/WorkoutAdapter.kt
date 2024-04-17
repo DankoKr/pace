@@ -11,8 +11,29 @@ import com.example.pace.domain.Workout
 class WorkoutAdapter(private val workouts: List<Workout>) :
     RecyclerView.Adapter<WorkoutAdapter.ViewHolder>() {
 
+    interface OnItemClickListener {
+        fun onItemClick(workout: Workout)
+    }
+
+    private var listener: OnItemClickListener? = null
+
+    // Setter method for the listener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val workoutNameTextView: TextView = itemView.findViewById(R.id.workoutNameTextView)
+
+        init {
+            // Set click listener
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    listener?.onItemClick(workouts[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
