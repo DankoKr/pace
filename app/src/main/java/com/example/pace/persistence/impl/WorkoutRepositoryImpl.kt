@@ -16,7 +16,9 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
             val userDocRef = firestore.collection("users").document(userId)
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-            userDocRef.collection(currentDate).add(workout).await()
+            userDocRef.collection(currentDate)
+                .add(workout)
+                .await()
         } catch (exception: Exception) {
             throw exception
         }
@@ -35,6 +37,19 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
                 // Create a new Workout instance with the Firestore id
                 workout.copy(id = document.id)
             }
+        } catch (exception: Exception) {
+            throw exception
+        }
+    }
+
+    override suspend fun deleteWorkout(userId: String, selectedDate: String, workoutId: String) {
+        try {
+            firestore.collection("users")
+                .document(userId)
+                .collection(selectedDate)
+                .document(workoutId)
+                .delete()
+                .await()
         } catch (exception: Exception) {
             throw exception
         }

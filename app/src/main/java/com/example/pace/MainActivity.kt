@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                             // Start ManageWorkoutActivity with selected workout data
                             val intent = Intent(this@MainActivity, ManageWorkoutActivity::class.java)
                             intent.putExtra("workout", workout)
+                            intent.putExtra("selectedDate", selectedDate)
                             startActivity(intent)
                         }
                     })
