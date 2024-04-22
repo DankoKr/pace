@@ -1,5 +1,6 @@
 package com.example.pace
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -64,17 +65,30 @@ class ManageWorkoutActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-
     }
     private fun deleteWorkout(workout: Workout, selectedDate: String){
         val userId = authService.getUserId().toString()
-        lifecycleScope.launch {
-            try {
-                workoutService.deleteWorkout(userId, selectedDate, workout.id.toString())
-            } catch (e: Exception) {
-                Toast.makeText(this@ManageWorkoutActivity, "Failed to delete workout: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
 
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder
+            .setMessage("Delete workout '${workout.workoutName}' created on $selectedDate")
+            .setTitle("Confirmation")
+            .setPositiveButton("Confirm") { _, _ ->
+                lifecycleScope.launch {
+                    try {
+                        workoutService.deleteWorkout(userId, selectedDate, workout.id.toString())
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ManageWorkoutActivity, "Failed to delete workout: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 }
