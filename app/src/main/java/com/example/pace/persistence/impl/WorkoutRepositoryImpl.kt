@@ -55,4 +55,28 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
         }
     }
 
+    override suspend fun editWorkout(userId: String, selectedDate: String, workout: Workout) {
+        val workoutUpdates = hashMapOf(
+            "workoutName" to (workout.workoutName ?: ""),
+            "gymName" to (workout.gymName ?: ""),
+            "exercises" to (workout.exercises?.map { exercise ->
+                hashMapOf<String, Any>(
+                    "name" to (exercise.name ?: ""),
+                    "reps" to exercise.reps,
+                    "kg" to exercise.kg
+                )
+            } ?: emptyList())
+        )
+        try {
+            firestore.collection("users")
+                .document(userId)
+                .collection(selectedDate)
+                .document(workout.id.toString())
+                .set(workoutUpdates)
+                .await()
+        } catch (exception: Exception) {
+            throw exception
+        }
+    }
+
 }

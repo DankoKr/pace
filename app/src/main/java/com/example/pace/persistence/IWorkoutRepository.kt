@@ -6,4 +6,5 @@ interface IWorkoutRepository {
     suspend fun createWorkout(userId: String, workout: HashMap<String, Any>)
     suspend fun getWorkoutsForDate(userId: String, selectedDate: String): List<Workout>
     suspend fun deleteWorkout(userId: String, selectedDate: String, workoutId: String)
+    suspend fun editWorkout(userId: String, selectedDate: String, workout: Workout)
 }

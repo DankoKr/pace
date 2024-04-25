@@ -15,6 +15,9 @@
     <string name="kg">Kg</string>
     <string name="reps">Reps</string>
     <string name="create_workout">Create Workout</string>
-    <string name="go_back">Go back</string>
+    <string name="go_back">Back</string>
     <string name="delete">Delete</string>
+    <string name="x">X</string>
+    <string name="delete_workout">Delete Workout</string>
+    <string name="save">Save</string>
 </resources>

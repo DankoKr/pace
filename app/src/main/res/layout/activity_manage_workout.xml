@@ -7,37 +7,46 @@
     android:layout_height="match_parent"
     tools:context=".ManageWorkoutActivity">
 
-    <TextView
-        android:id="@+id/tvWorkoutName"
+    <EditText
+        android:id="@+id/edWorkoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/rvWorkoutExercises"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.254"
-        android:textSize="20sp" />
+        app:layout_constraintVertical_bias="0.185"
+        tools:ignore="LabelFor" />
 
-    <TextView
-        android:id="@+id/tvGymName"
+    <EditText
+        android:id="@+id/edGymName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/rvWorkoutExercises"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWorkoutName"
-        app:layout_constraintVertical_bias="0.444"
-        android:textSize="20sp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.683"
+        tools:ignore="LabelFor" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWorkoutExercises"
-        android:layout_width="349dp"
-        android:layout_height="449dp"
+        android:layout_width="385dp"
+        android:layout_height="438dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.384"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.593" />
 
     <Button
         android:id="@+id/btnBackToMainActivity"
@@ -48,20 +57,34 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnDeleteWorkout"
+        app:layout_constraintHorizontal_bias="0.234"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/btnDeleteWorkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="58dp"
-        android:layout_marginEnd="88dp"
+        android:layout_marginEnd="48dp"
         android:text="@string/delete"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <Button
+        android:id="@+id/btnSaveWorkout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:text="@string/save"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnBackToMainActivity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
         app:layout_constraintVertical_bias="0.0" />
 

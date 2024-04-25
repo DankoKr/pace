@@ -4,10 +4,10 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Workout (
-    val id: String? = null, // This field is used locally and not stored in Firestore
-    val workoutName: String? = null,
-    val gymName: String? = null,
-    val exercises: List<Exercise>? = null
+    var id: String? = null, // This field is used locally and not stored in Firestore
+    var workoutName: String? = null,
+    var gymName: String? = null,
+    var exercises: List<Exercise>? = null
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

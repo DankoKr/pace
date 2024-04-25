@@ -4,9 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Exercise (
-    val name: String? = null,
-    val reps: Int = 0,
-    val kg: Double = 0.0
+    var name: String? = null,
+    var reps: Int = 0,
+    var kg: Double = 0.0
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
