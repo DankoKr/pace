@@ -1,92 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ManageWorkoutActivity">
+    android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/edWorkoutName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/rvWorkoutExercises"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.185"
-        tools:ignore="LabelFor" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edGymName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/rvWorkoutExercises"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.664"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.683"
-        tools:ignore="LabelFor" />
+        <!-- Container for Dynamic Exercise Fields -->
+        <LinearLayout
+            android:id="@+id/exercisesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+            <!-- Dynamic exercises will be added here -->
+        </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvWorkoutExercises"
-        android:layout_width="385dp"
-        android:layout_height="438dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.384"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.593" />
+        <Button
+            android:id="@+id/addExerciseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_exercise"
+            android:layout_gravity="center"/>
 
-    <Button
-        android:id="@+id/btnBackToMainActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
-        android:text="@string/go_back"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnDeleteWorkout"
-        app:layout_constraintHorizontal_bias="0.234"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
-        app:layout_constraintVertical_bias="0.6" />
+        <Button
+            android:id="@+id/btnSaveWorkout"
+            android:layout_width="268dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:layout_gravity="center" />
 
-    <Button
-        android:id="@+id/btnDeleteWorkout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
-        android:layout_marginEnd="48dp"
-        android:text="@string/delete"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
-        app:layout_constraintVertical_bias="0.6" />
-
-    <Button
-        android:id="@+id/btnSaveWorkout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:text="@string/save"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnBackToMainActivity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvWorkoutExercises"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnGoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/go_back" />
+    </LinearLayout>
+</ScrollView>

@@ -1,13 +1,17 @@
 package com.example.pace.business.impl
 
+import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.example.pace.R
-import com.example.pace.business.ExerciseService
+import com.example.pace.business.IExerciseService
 import com.example.pace.domain.Exercise
+import kotlin.Int
 
-class ExerciseServiceImpl : ExerciseService {
-    override fun createExercises(exercisesContainer: LinearLayout, exNameId: Int, repsFieldId: Int, kgFieldId: Int): List<Exercise> {
+
+class ExerciseServiceImpl : IExerciseService {
+    override fun saveExercises(exercisesContainer: LinearLayout, exNameId: Int, repsFieldId: Int, kgFieldId: Int): List<Exercise> {
         val exercises = mutableListOf<Exercise>()
 
         val totalChildren = exercisesContainer.childCount
@@ -29,5 +33,24 @@ class ExerciseServiceImpl : ExerciseService {
             }
         }
         return exercises
+    }
+
+    override fun displayExercises(exercisesContainer: LinearLayout, exercises: List<Exercise>) {
+        exercisesContainer.removeAllViews()
+
+        for (exercise in exercises) {
+            val exerciseLayout = LayoutInflater.from(exercisesContainer.context)
+                .inflate(R.layout.exercise_item, exercisesContainer, false) as LinearLayout
+
+            val nameTextView = exerciseLayout.findViewById<TextView>(R.id.exerciseName)
+            val repsTextView = exerciseLayout.findViewById<TextView>(R.id.repsField)
+            val weightTextView = exerciseLayout.findViewById<TextView>(R.id.kgField)
+
+            nameTextView.text = exercise.name
+            repsTextView.text = exercise.reps.toString()
+            weightTextView.text = exercise.kg.toString()
+
+            exercisesContainer.addView(exerciseLayout)
+        }
     }
 }

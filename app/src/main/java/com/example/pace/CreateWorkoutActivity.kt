@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.pace.business.ExerciseService
+import com.example.pace.business.IExerciseService
 import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
@@ -27,7 +27,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var workoutRepository: IWorkoutRepository
     private lateinit var workoutService: IWorkoutService
-    private lateinit var exerciseService: ExerciseService
+    private lateinit var exerciseService: IExerciseService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
 
         val exercisesContainer = findViewById<LinearLayout>(R.id.exercisesContainer)
 
-        val exercises = exerciseService.createExercises(exercisesContainer, R.id.exerciseName,
+        val exercises = exerciseService.saveExercises(exercisesContainer, R.id.exerciseName,
             R.id.repsField, R.id.kgField)
 
         val workout = Workout(id = null, workoutName, gymName, exercises)
