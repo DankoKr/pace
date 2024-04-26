@@ -9,11 +9,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.pace.business.ExerciseService
 import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
+import com.example.pace.business.impl.ExerciseServiceImpl
 import com.example.pace.business.impl.WorkoutServiceImpl
-import com.example.pace.domain.Exercise
 import com.example.pace.domain.Workout
 import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
@@ -26,6 +27,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var workoutRepository: IWorkoutRepository
     private lateinit var workoutService: IWorkoutService
+    private lateinit var exerciseService: ExerciseService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class CreateWorkoutActivity : AppCompatActivity() {
         // Initialize repository and service
         workoutRepository = WorkoutRepositoryImpl(firestore)
         workoutService = WorkoutServiceImpl(workoutRepository)
+        exerciseService = ExerciseServiceImpl()
 
         // Display the exercise fields
         addExerciseButton.setOnClickListener {
@@ -70,25 +73,9 @@ class CreateWorkoutActivity : AppCompatActivity() {
         val gymName = findViewById<EditText>(R.id.gymName).text.toString()
 
         val exercisesContainer = findViewById<LinearLayout>(R.id.exercisesContainer)
-        val exercises = mutableListOf<Exercise>()
 
-        val totalChildren = exercisesContainer.childCount
-        for (i in 0 until totalChildren) {
-            val exerciseLayout = exercisesContainer.getChildAt(i) as? LinearLayout
-            if (exerciseLayout != null) {
-                val nameEditText = exerciseLayout.findViewById<EditText>(R.id.exerciseName)
-                val repsEditText = exerciseLayout.findViewById<EditText>(R.id.repsField)
-                val weightEditText = exerciseLayout.findViewById<EditText>(R.id.kgField)
-
-                val name = nameEditText?.text.toString()
-                val reps = repsEditText?.text.toString().toIntOrNull() ?: 0
-                val weight = weightEditText?.text.toString().toDoubleOrNull() ?: 0.0
-
-                if (name.isNotBlank()) { // Not adding empty exercises
-                    exercises.add(Exercise(name, reps, weight))
-                }
-            }
-        }
+        val exercises = exerciseService.createExercises(exercisesContainer, R.id.exerciseName,
+            R.id.repsField, R.id.kgField)
 
         val workout = Workout(id = null, workoutName, gymName, exercises)
         if (userId != null) {
