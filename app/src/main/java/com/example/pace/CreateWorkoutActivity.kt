@@ -9,8 +9,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.pace.business.IExerciseService
 import com.example.pace.business.IAuthService
+import com.example.pace.business.IExerciseService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
 import com.example.pace.business.impl.ExerciseServiceImpl
@@ -82,6 +82,10 @@ class CreateWorkoutActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     workoutService.createWorkout(userId, workout)
+                    startActivity(Intent(
+                        this@CreateWorkoutActivity,
+                        MainActivity::class.java
+                    ))
                 } catch (e: Exception) {
                     Toast.makeText(this@CreateWorkoutActivity, "Failed to create workout: ${e.message}", Toast.LENGTH_LONG).show()
                 }

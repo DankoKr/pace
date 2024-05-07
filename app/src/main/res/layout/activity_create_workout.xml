@@ -43,20 +43,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_exercise"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:backgroundTint="@color/orange"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/btnCreateWorkout"
             android:layout_width="268dp"
             android:layout_height="wrap_content"
             android:text="@string/create_workout"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:backgroundTint="@color/orange"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/btnGoBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/go_back" />
+            android:text="@string/go_back"
+            android:backgroundTint="#DCDCDC"
+            android:textColor="@color/black" />
     </LinearLayout>
 </ScrollView>

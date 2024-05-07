@@ -24,6 +24,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val workoutNameTextView: TextView = itemView.findViewById(R.id.workoutNameTextView)
+        val workoutGymNameTextView: TextView = itemView.findViewById(R.id.workoutGymNameTextView)
 
         init {
             // Set click listener
@@ -45,6 +46,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val workout = workouts[position]
         holder.workoutNameTextView.text = workout.workoutName
+        holder.workoutGymNameTextView.text = workout.gymName
     }
 
     override fun getItemCount(): Int {

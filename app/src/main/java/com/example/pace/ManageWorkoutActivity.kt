@@ -110,6 +110,7 @@ class ManageWorkoutActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     workoutService.editWorkout(userId, selectedDate, workout)
+                    startActivity(Intent(this@ManageWorkoutActivity, MainActivity::class.java))
                 } catch (e: Exception) {
                     Toast.makeText(this@ManageWorkoutActivity, "Failed to save changes: ${e.message}", Toast.LENGTH_LONG).show()
                 }
