@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,16 +88,20 @@ class MainActivity : AppCompatActivity() {
             try {
                 val workouts = workoutService.getWorkoutsForDate(userId, selectedDate)
                 if (workouts.isNotEmpty()) {
-                    val adapter = WorkoutAdapter(workouts)
+                    val adapter = WorkoutAdapter(workouts){ workout ->
+                        deleteWorkout(workout, selectedDate)
+                    }
                     adapter.setOnItemClickListener(object : WorkoutAdapter.OnItemClickListener {
                         override fun onItemClick(workout: Workout) {
                             // Start ManageWorkoutActivity with selected workout data
-                            val intent = Intent(this@MainActivity, ManageWorkoutActivity::class.java)
+                            val intent = Intent(this@MainActivity,
+                                ManageWorkoutActivity::class.java)
                             intent.putExtra("workout", workout)
                             intent.putExtra("selectedDate", selectedDate)
                             startActivity(intent)
                         }
                     })
+
                     recyclerView.adapter = adapter
                 } else {
                     recyclerView.adapter = null
@@ -111,6 +116,33 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error fetching workouts", e)
             }
         }
+    }
+
+    private fun deleteWorkout(workout: Workout, selectedDate: String){
+        val userId = authService.getUserId().toString()
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder
+            .setMessage("Delete workout '${workout.workoutName}' created on $selectedDate")
+            .setTitle("Confirmation")
+            .setPositiveButton("Confirm") { _, _ ->
+                lifecycleScope.launch {
+                    try {
+                        workoutService.deleteWorkout(userId, selectedDate, workout.id.toString())
+                    } catch (e: Exception) {
+                        Toast.makeText(this@MainActivity,
+                            "Failed to delete workout: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 }

@@ -52,10 +52,11 @@
             android:layout_height="wrap_content"
             android:minHeight="50dp"
             android:background="@color/black"
+            app:backgroundTint="@color/orange"
             android:rotationX="-1"
             android:text="@string/sign_up_button"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
     </LinearLayout>

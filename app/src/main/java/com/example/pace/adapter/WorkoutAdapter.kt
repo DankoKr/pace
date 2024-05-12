@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pace.R
 import com.example.pace.domain.Workout
 
-class WorkoutAdapter(private val workouts: List<Workout>) :
+class WorkoutAdapter(private val workouts: List<Workout>,
+                     private val deleteCallback: (Workout) -> Unit) :
     RecyclerView.Adapter<WorkoutAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -16,8 +17,6 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
     }
 
     private var listener: OnItemClickListener? = null
-
-    // Setter method for the listener
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
@@ -27,7 +26,17 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
         val workoutGymNameTextView: TextView = itemView.findViewById(R.id.workoutGymNameTextView)
 
         init {
-            // Set click listener
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val workout = workouts[position]
+                    deleteCallback(workout)
+                    true
+                } else {
+                    false
+                }
+            }
+
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -36,6 +45,7 @@ class WorkoutAdapter(private val workouts: List<Workout>) :
             }
         }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)

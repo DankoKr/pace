@@ -32,12 +32,4 @@
         android:inputType="number"
         android:importantForAutofill="no" />
 
-    <Button
-        android:id="@+id/btnDeleteExercise"
-        android:layout_width="60dp"
-        android:layout_height="48dp"
-        android:text="@string/x"
-        android:backgroundTint="#DCDCDC"
-        android:textColor="@color/black" />
-
 </LinearLayout>

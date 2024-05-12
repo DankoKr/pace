@@ -1,12 +1,10 @@
 package com.example.pace
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.LinearLayout
-// import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -56,12 +54,6 @@ class ManageWorkoutActivity : AppCompatActivity() {
             exerciseContainer.addView(exerciseView)
         }
 
-
-//        val btnDeleteWorkout: Button = findViewById(R.id.btnDeleteWorkout)
-//        btnDeleteWorkout.setOnClickListener {
-//            deleteWorkout(workout, selectedDate)
-//        }
-
         val btnGoBack: Button = findViewById(R.id.btnGoBack)
         btnGoBack.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -72,31 +64,6 @@ class ManageWorkoutActivity : AppCompatActivity() {
         btnSaveWorkout.setOnClickListener {
             editWorkout()
         }
-    }
-    private fun deleteWorkout(workout: Workout, selectedDate: String){
-        val userId = authService.getUserId().toString()
-
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder
-            .setMessage("Delete workout '${workout.workoutName}' created on $selectedDate")
-            .setTitle("Confirmation")
-            .setPositiveButton("Confirm") { _, _ ->
-                lifecycleScope.launch {
-                    try {
-                        workoutService.deleteWorkout(userId, selectedDate, workout.id.toString())
-                    } catch (e: Exception) {
-                        Toast.makeText(this@ManageWorkoutActivity, "Failed to delete workout: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
     }
 
     private fun editWorkout() {
