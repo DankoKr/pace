@@ -20,4 +20,5 @@
     <string name="x">X</string>
     <string name="delete_workout">Delete Workout</string>
     <string name="save">Save</string>
+    <string name="reuse_workout">Reuse workout</string>
 </resources>

@@ -5,6 +5,7 @@ import com.example.pace.persistence.IWorkoutRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -19,6 +20,9 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
             userDocRef.collection(currentDate)
                 .add(workout)
                 .await()
+
+            // Duplicate the workout to all same days in the month
+            duplicateWorkoutToSameDaysInMonth(userId, workout)
         } catch (exception: Exception) {
             throw exception
         }
@@ -79,4 +83,44 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
         }
     }
 
+    override suspend fun duplicateWorkoutToSameDaysInMonth(userId: String, workout: HashMap<String, Any>) {
+        val calendar = Calendar.getInstance()
+        val today = calendar.time
+
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val datesToDuplicate = mutableListOf<String>()
+
+        // Move to the first day of the current month
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+        // Find the first occurrence of today's day of the week in the current month
+        while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        // Collect all occurrences of today's day of the week in the current month
+        while (calendar.get(Calendar.MONTH) == month) {
+            val formattedDate = dateFormat.format(calendar.time)
+            if (formattedDate != dateFormat.format(today)) {
+                datesToDuplicate.add(formattedDate)
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, 7)
+        }
+
+        val userDocRef = firestore.collection("users").document(userId)
+
+        for (date in datesToDuplicate) {
+            try {
+                userDocRef.collection(date)
+                    .add(workout)
+                    .await()
+            } catch (exception: Exception) {
+                throw exception
+            }
+        }
+    }
 }
