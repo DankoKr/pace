@@ -7,8 +7,8 @@
 
     <EditText
         android:id="@+id/exerciseName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_weight="3"
         android:hint="@string/exercise_name"
         android:inputType="text"
@@ -16,8 +16,8 @@
 
     <EditText
         android:id="@+id/kgField"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:hint="@string/kg"
         android:inputType="numberDecimal"
@@ -25,10 +25,11 @@
 
     <EditText
         android:id="@+id/repsField"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:hint="@string/reps"
         android:inputType="number"
         android:importantForAutofill="no" />
+
 </LinearLayout>

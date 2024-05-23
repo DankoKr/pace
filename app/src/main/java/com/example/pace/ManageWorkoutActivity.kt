@@ -4,13 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.pace.business.IAuthService
 import com.example.pace.business.IExerciseService
+import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
 import com.example.pace.business.impl.ExerciseServiceImpl
@@ -21,42 +20,38 @@ import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class CreateWorkoutActivity : AppCompatActivity() {
-
-    private lateinit var authService: IAuthService
+class ManageWorkoutActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var workoutRepository: IWorkoutRepository
     private lateinit var workoutService: IWorkoutService
+    private lateinit var authService: IAuthService
+    private lateinit var selectedDate: String
+    private lateinit var workout: Workout
     private lateinit var exerciseService: IExerciseService
-
+    private lateinit var exerciseContainer: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_workout)
+        setContentView(R.layout.activity_manage_workout)
 
-        val addExerciseButton: Button = findViewById(R.id.addExerciseButton)
-        val exercisesContainer: LinearLayout = findViewById(R.id.exercisesContainer)
-
-        // Initialize Firebase Auth and Firestore instances
-        authService = AuthServiceImpl(this)
         firestore = FirebaseFirestore.getInstance()
-
-        // Initialize repository and service
         workoutRepository = WorkoutRepositoryImpl(firestore)
         workoutService = WorkoutServiceImpl(workoutRepository)
+        authService = AuthServiceImpl(this)
         exerciseService = ExerciseServiceImpl()
 
-        // Display the exercise fields
+        workout = (intent.getParcelableExtra("workout") as? Workout)!!
+        selectedDate = intent.getStringExtra("selectedDate").toString()
+
+        exerciseContainer = findViewById(R.id.exercisesContainer)
+        exerciseService.displayExercises(exerciseContainer, workout.exercises!!)
+
+        val addExerciseButton: Button = findViewById(R.id.addExerciseButton)
         addExerciseButton.setOnClickListener {
             val inflater = LayoutInflater.from(this)
-            val exerciseView = inflater.inflate(R.layout.exercise_item, exercisesContainer,
+            val exerciseView = inflater.inflate(R.layout.exercise_item, exerciseContainer,
                 false
             )
-            exercisesContainer.addView(exerciseView)
-        }
-
-        val btnCreateWorkout: Button = findViewById(R.id.btnCreateWorkout)
-        btnCreateWorkout.setOnClickListener {
-            saveWorkoutToFirebase()
+            exerciseContainer.addView(exerciseView)
         }
 
         val btnGoBack: Button = findViewById(R.id.btnGoBack)
@@ -64,33 +59,29 @@ class CreateWorkoutActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        val btnSaveWorkout: Button = findViewById(R.id.btnSaveWorkout)
+        btnSaveWorkout.setOnClickListener {
+            editWorkout()
+        }
     }
 
-    private fun saveWorkoutToFirebase() {
+    private fun editWorkout() {
         val userId = authService.getUserId()
-
-        val workoutName = findViewById<EditText>(R.id.workoutName).text.toString()
-        val gymName = findViewById<EditText>(R.id.gymName).text.toString()
-
-        val exercisesContainer = findViewById<LinearLayout>(R.id.exercisesContainer)
-
-        val exercises = exerciseService.saveExercises(exercisesContainer, R.id.exerciseName,
+        val updatedExercises = exerciseService.saveExercises(exerciseContainer, R.id.exerciseName,
             R.id.repsField, R.id.kgField)
 
-        val workout = Workout(id = null, workoutName, gymName, exercises)
+        workout.exercises = updatedExercises
+
         if (userId != null) {
             lifecycleScope.launch {
                 try {
-                    workoutService.createWorkout(userId, workout)
-                    startActivity(Intent(
-                        this@CreateWorkoutActivity,
-                        MainActivity::class.java
-                    ))
+                    workoutService.editWorkout(userId, selectedDate, workout)
+                    startActivity(Intent(this@ManageWorkoutActivity, MainActivity::class.java))
                 } catch (e: Exception) {
-                    Toast.makeText(this@CreateWorkoutActivity, "Failed to create workout: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@ManageWorkoutActivity, "Failed to save changes: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
-
         }
     }
 }

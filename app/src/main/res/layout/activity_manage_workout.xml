@@ -10,24 +10,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <EditText
-            android:id="@+id/workoutName"
-            android:layout_width="290dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/workout_name"
-            android:importantForAutofill="no"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/gymName"
-            android:layout_width="290dp"
-            android:layout_height="60dp"
-            android:hint="@string/gym_name"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:layout_gravity="center" />
-
         <!-- Container for Dynamic Exercise Fields -->
         <LinearLayout
             android:id="@+id/exercisesContainer"
@@ -44,17 +26,17 @@
             android:layout_height="wrap_content"
             android:text="@string/add_exercise"
             android:layout_gravity="center"
-            android:backgroundTint="@color/orange"
+            android:backgroundTint="#DCDCDC"
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btnCreateWorkout"
+            android:id="@+id/btnSaveWorkout"
             android:layout_width="268dp"
             android:layout_height="wrap_content"
-            android:text="@string/create_workout"
+            android:text="@string/save"
             android:layout_gravity="center"
             android:backgroundTint="@color/orange"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/btnGoBack"
@@ -63,6 +45,6 @@
             android:layout_gravity="center"
             android:text="@string/go_back"
             android:backgroundTint="#DCDCDC"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"/>
     </LinearLayout>
 </ScrollView>

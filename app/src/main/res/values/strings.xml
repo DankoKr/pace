@@ -11,9 +11,14 @@
     <string name="workout_name">Workout Name</string>
     <string name="gym_name">Gym Name</string>
     <string name="add_exercise">Add Exercise</string>
-    <string name="exercise_name">Exercise Name</string>
+    <string name="exercise_name">Ex Name</string>
     <string name="kg">Kg</string>
     <string name="reps">Reps</string>
     <string name="create_workout">Create Workout</string>
-    <string name="go_back">Go back</string>
+    <string name="go_back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="x">X</string>
+    <string name="delete_workout">Delete Workout</string>
+    <string name="save">Save</string>
+    <string name="reuse_workout">Reuse workout</string>
 </resources>

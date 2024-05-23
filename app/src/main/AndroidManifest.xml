@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Pace"
         tools:targetApi="31">
         <activity
+            android:name=".ReuseWorkoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageWorkoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateWorkoutActivity"
             android:exported="false" />
         <activity

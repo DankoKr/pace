@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.example.pace.business.IAuthService
 import com.example.pace.business.IWorkoutService
 import com.example.pace.business.impl.AuthServiceImpl
 import com.example.pace.business.impl.WorkoutServiceImpl
+import com.example.pace.domain.Workout
 import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         workoutRepository = WorkoutRepositoryImpl(firestore)
         workoutService = WorkoutServiceImpl(workoutRepository)
 
-        val textView = findViewById<TextView>(R.id.tvProfileName)
+        val profileName = findViewById<TextView>(R.id.tvProfileName)
         val signOutButton = findViewById<Button>(R.id.btnLogout)
         val getWorkoutsForDateButton = findViewById<Button>(R.id.btnGetWorkoutsForDate)
         // Set up MaterialDatePicker
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        textView.text = "${authService.getCurrentUserName()}"
+        profileName.text = "${authService.getCurrentUserName()}"
 
         // SignOut button
         signOutButton.setOnClickListener {
@@ -80,17 +82,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchWorkouts(selectedDate: String) {
         val userId = authService.getUserId().toString()
+        val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
 
         lifecycleScope.launch {
             try {
                 val workouts = workoutService.getWorkoutsForDate(userId, selectedDate)
                 if (workouts.isNotEmpty()) {
-                    val recyclerView = findViewById<RecyclerView>(R.id.rvWorkouts)
-                    recyclerView.adapter = WorkoutAdapter(workouts)
+                    val adapter = WorkoutAdapter(workouts){ workout ->
+                        deleteWorkout(workout, selectedDate)
+                    }
+                    adapter.setOnItemClickListener(object : WorkoutAdapter.OnItemClickListener {
+                        override fun onItemClick(workout: Workout) {
+                            // Start ManageWorkoutActivity with selected workout data
+                            val intent = Intent(this@MainActivity,
+                                ManageWorkoutActivity::class.java)
+                            intent.putExtra("workout", workout)
+                            intent.putExtra("selectedDate", selectedDate)
+                            startActivity(intent)
+                        }
+                    })
+
+                    recyclerView.adapter = adapter
                 } else {
+                    recyclerView.adapter = null
                     val builder = AlertDialog.Builder(this@MainActivity)
                     builder.setTitle("No Workouts")
-                    builder.setMessage("There are no workouts available for ${selectedDate}.")
+                    builder.setMessage("There are no workouts available for $selectedDate.")
                     builder.setPositiveButton("OK", null)
                     val dialog = builder.create()
                     dialog.show()
@@ -99,6 +116,33 @@ class MainActivity : AppCompatActivity() {
                 Log.e("MainActivity", "Error fetching workouts", e)
             }
         }
+    }
+
+    private fun deleteWorkout(workout: Workout, selectedDate: String){
+        val userId = authService.getUserId().toString()
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder
+            .setMessage("Delete workout '${workout.workoutName}' created on $selectedDate")
+            .setTitle("Confirmation")
+            .setPositiveButton("Confirm") { _, _ ->
+                lifecycleScope.launch {
+                    try {
+                        workoutService.deleteWorkout(userId, selectedDate, workout.id.toString())
+                    } catch (e: Exception) {
+                        Toast.makeText(this@MainActivity,
+                            "Failed to delete workout: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 }
