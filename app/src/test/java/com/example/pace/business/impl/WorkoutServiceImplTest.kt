@@ -43,14 +43,14 @@ class WorkoutServiceImplTest {
             )
         )
 
-        `when`(repository.createWorkout(userId, expectedWorkoutMap)).then {}
+        `when`(repository.createWorkout(userId, expectedWorkoutMap, false)).then {}
 
         // When
-        workoutService.createWorkout(userId, workout)
+        workoutService.createWorkout(userId, workout, false)
 
         // Then
         // Verify that repository.createWorkout() was called with the expected arguments
-        org.mockito.Mockito.verify(repository).createWorkout(userId, expectedWorkoutMap)
+        org.mockito.Mockito.verify(repository).createWorkout(userId, expectedWorkoutMap, false)
     }
 
     @Test

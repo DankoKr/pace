@@ -5,7 +5,7 @@ import com.example.pace.domain.Workout
 import com.example.pace.persistence.IWorkoutRepository
 
 class WorkoutServiceImpl(private val repository: IWorkoutRepository) : IWorkoutService {
-    override suspend fun createWorkout(userId: String, workout: Workout) {
+    override suspend fun createWorkout(userId: String, workout: Workout, isRecurring: Boolean) {
         val workoutMap = hashMapOf(
             "workoutName" to (workout.workoutName ?: ""),
             "gymName" to (workout.gymName ?: ""),
@@ -18,7 +18,7 @@ class WorkoutServiceImpl(private val repository: IWorkoutRepository) : IWorkoutS
             } ?: emptyList())
         )
 
-        repository.createWorkout(userId, workoutMap)
+        repository.createWorkout(userId, workoutMap, isRecurring)
     }
 
     override suspend fun getWorkoutsForDate(userId: String, selectedDate: String): List<Workout> {

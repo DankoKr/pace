@@ -1,5 +1,6 @@
 package com.example.pace
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +21,8 @@ import com.example.pace.persistence.IWorkoutRepository
 import com.example.pace.persistence.impl.WorkoutRepositoryImpl
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class CreateWorkoutActivity : AppCompatActivity() {
 
@@ -48,15 +51,15 @@ class CreateWorkoutActivity : AppCompatActivity() {
         // Display the exercise fields
         addExerciseButton.setOnClickListener {
             val inflater = LayoutInflater.from(this)
-            val exerciseView = inflater.inflate(R.layout.exercise_item, exercisesContainer,
-                false
-            )
+            val exerciseView = inflater.inflate(R.layout.exercise_item, exercisesContainer, false)
             exercisesContainer.addView(exerciseView)
         }
 
         val btnCreateWorkout: Button = findViewById(R.id.btnCreateWorkout)
         btnCreateWorkout.setOnClickListener {
-            saveWorkoutToFirebase()
+            lifecycleScope.launch {
+                saveWorkoutToFirebase()
+            }
         }
 
         val btnGoBack: Button = findViewById(R.id.btnGoBack)
@@ -66,7 +69,27 @@ class CreateWorkoutActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveWorkoutToFirebase() {
+    private suspend fun showRecurringDialog(): Boolean {
+        return suspendCancellableCoroutine { continuation ->
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setMessage("Do you want to create a recurring workout?")
+                .setTitle("Recurring or not?")
+                .setPositiveButton("Yes") { _, _ ->
+                    continuation.resume(true)
+                }
+                .setNegativeButton("No") { _, _ ->
+                    continuation.resume(false)
+                }
+                .setOnCancelListener {
+                    continuation.resume(false)
+                }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+    }
+
+    private suspend fun saveWorkoutToFirebase() {
         val userId = authService.getUserId()
 
         val workoutName = findViewById<EditText>(R.id.workoutName).text.toString()
@@ -74,23 +97,21 @@ class CreateWorkoutActivity : AppCompatActivity() {
 
         val exercisesContainer = findViewById<LinearLayout>(R.id.exercisesContainer)
 
-        val exercises = exerciseService.saveExercises(exercisesContainer, R.id.exerciseName,
-            R.id.repsField, R.id.kgField)
+        val exercises = exerciseService.saveExercises(exercisesContainer, R.id.exerciseName, R.id.repsField, R.id.kgField)
 
         val workout = Workout(id = null, workoutName, gymName, exercises)
-        if (userId != null) {
-            lifecycleScope.launch {
-                try {
-                    workoutService.createWorkout(userId, workout)
-                    startActivity(Intent(
-                        this@CreateWorkoutActivity,
-                        MainActivity::class.java
-                    ))
-                } catch (e: Exception) {
-                    Toast.makeText(this@CreateWorkoutActivity, "Failed to create workout: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
 
+        // Show the dialog and wait for the user response
+        val isRecurring = showRecurringDialog()
+
+        if (userId != null) {
+            try {
+                workoutService.createWorkout(userId, workout, isRecurring)
+                startActivity(Intent(this@CreateWorkoutActivity, MainActivity::class.java))
+                finish()
+            } catch (e: Exception) {
+                Toast.makeText(this@CreateWorkoutActivity, "Failed to create workout: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

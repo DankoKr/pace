@@ -11,7 +11,7 @@ import java.util.Locale
 
 
 class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkoutRepository {
-    override suspend fun createWorkout(userId: String, workout: HashMap<String, Any>) {
+    override suspend fun createWorkout(userId: String, workout: HashMap<String, Any>, isRecurring: Boolean) {
         try {
             // Reference to the user document in the 'users' collection
             val userDocRef = firestore.collection("users").document(userId)
@@ -21,8 +21,9 @@ class WorkoutRepositoryImpl(private val firestore: FirebaseFirestore) : IWorkout
                 .add(workout)
                 .await()
 
-            // Duplicate the workout to all same days in the month
-            duplicateWorkoutToSameDaysInMonth(userId, workout)
+            if (isRecurring){// Duplicate the workout to all same days in the month
+                duplicateWorkoutToSameDaysInMonth(userId, workout)
+            }
         } catch (exception: Exception) {
             throw exception
         }
