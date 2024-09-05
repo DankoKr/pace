@@ -23,4 +23,4 @@ Pace is a an Android application designed for workout tracking. This app offers 
 4. Run the app on an emulator or a physical device.
 
 ## License
-This project is licensed under the MIT License.
+This project is free to use and the owner does not take responsibility for any misbehaviour with it.
